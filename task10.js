@@ -1,123 +1,76 @@
-(function($){
+(function ($) {
+  $.fn.myTabs = function (options) {
+    var settings = $.extend(
+      {
+        activeClass: "activeTab",
+        speed: 400,
+        defaultTab: "#home",
+      },
+      options,
+    );
 
-$.fn.myTabs=function(options){
+    var container = this;
+    container.find(".tab-content").hide();
 
-var settings=$.extend({
+    function showTab(tab) {
+      container.find(".tab-content").hide();
+      $(tab).fadeIn(settings.speed);
 
-activeClass:"activeTab",
-speed:400,
-defaultTab:"#home"
+      container.find(".tab-links a").removeClass(settings.activeClass);
+      container.find("[href='" + tab + "']").addClass(settings.activeClass);
+      window.location.hash = tab;
+    }
 
-},options);
+    var startTab = window.location.hash || settings.defaultTab;
 
+    showTab(startTab);
 
-var container=this;
+    container.find(".tab-links a").click(function (e) {
+      e.preventDefault();
 
+      var tab = $(this).attr("href");
 
+      showTab(tab);
+    });
 
-container.find(".tab-content").hide();
+    $(document).keydown(function (e) {
+      var tabs = container.find(".tab-links a");
 
+      var index = tabs.index(container.find("." + settings.activeClass));
 
+      if (e.keyCode == 39) {
+        index++;
 
+        if (index >= tabs.length) index = 0;
 
-function showTab(tab){
+        window.location.hash = tabs.eq(index).attr("href");
+      }
 
-container.find(".tab-content").hide();
+      if (e.keyCode == 37) {
+        index--;
 
-$(tab).fadeIn(settings.speed);
+        if (index < 0) index = tabs.length - 1;
 
+        window.location.hash = tabs.eq(index).attr("href");
+      }
+    });
 
-container.find(".tab-links a")
-.removeClass(settings.activeClass);
+    $(window).on("hashchange", function () {
+      var tab = window.location.hash;
 
-container.find("[href='"+tab+"']")
-.addClass(settings.activeClass);
+      if (tab) {
+        showTab(tab);
+      }
+    });
 
-
-
-window.location.hash=tab;
-
-}
-
-
-
-
-var startTab=window.location.hash
-||settings.defaultTab;
-
-showTab(startTab);
-
-
-
-
-
-container.find(".tab-links a").click(function(e){
-
-e.preventDefault();
-
-var tab=$(this).attr("href");
-
-showTab(tab);
-
-});
-
-
-$(document).keydown(function(e){
-
-var tabs=container.find(".tab-links a");
-
-var index=tabs.index(
-container.find("."+settings.activeClass)
-);
-
-if(e.keyCode==39){
-
-index++;
-
-if(index>=tabs.length)
-index=0;
-
-showTab(
-tabs.eq(index).attr("href")
-);
-
-}
-
-
-if(e.keyCode==37){
-
-index--;
-
-if(index<0)
-index=tabs.length-1;
-
-showTab(
-tabs.eq(index).attr("href")
-);
-
-}
-
-
-});
-
-
-return this;
-
-};
-
+    return this;
+  };
 })(jQuery);
 
-
-
-
-$(document).ready(function(){
-
-$("#mytabs").myTabs({
-
-activeClass:"activeTab",
-speed:500,
-defaultTab:"#home"
-
-});
-
+$(document).ready(function () {
+  $("#mytabs").myTabs({
+    activeClass: "activeTab",
+    speed: 500,
+    defaultTab: "#home",
+  });
 });
