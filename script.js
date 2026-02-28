@@ -1,103 +1,190 @@
-let booksJSON = [];
+var formStructure = [
+{
+label:"Name",
+type:"text",
+id:"name"
+},
+
+{
+label:"Email",
+type:"email",
+id:"email"
+},
+
+{
+label:"Password",
+type:"password",
+id:"password"
+},
+
+{
+label:"Country",
+type:"select",
+id:"country",
+
+option:["Nepal","USA","India","Bhutan", "Sri Lanka","China","Japan","Germany",
+"Finland","Thailand","Australia","New Zealand"]
+
+}
+
+];
+
+console.log(formStructure);
+
 
 $(document).ready(function(){
-    // ajax works like fetch
-    // ajax (worbose and detailed)
-    $.ajax({
-        url: "book.xml",
-        type: "GET",
-        dataType: "xml",
-        success: function(xml) {
 
-            $(xml).find("book").each(function(){
-                let book = {
-                    id: $(this).attr("id"),
-                    title: $(this).find("title").text(),
-                    author: $(this).find("author").text(),
-                    genres: $(this).find("genre").text(), // added genre
-                    price: parseFloat($(this).find("price").text()),
-                    publish_date: $(this).find("publish_date").text()
-                };
-                booksJSON.push(book);
-            });
 
-            populateFilters();
-            displayBooks(booksJSON);
-        },
-        error: function(){
-            alert("Error while loading xml file");
-        }
-    });
+$("#form").append("<label>"+formStructure[0].label+"</label><br>");
+$("#form").append("<input type='" + formStructure[0].type + "' id='" + formStructure[0].id + "'><br><br>");
 
-    $('#applyFilter').click(function(){
-        applyFilter();
-    });
+
+
+$("#form").append("<label>"+formStructure[1].label+"</label><br>");
+$("#form").append("<input type='"+ formStructure[1].type + "' id='"+formStructure[1].id + "'><br><br>");
+
+
+$("#form").append("<label>"+formStructure[2].label+"</label><br>");
+$("#form").append("<input type='"+ formStructure[2].type + "' id='" + formStructure[2].id + "'><br><br>");
+
+
+$("#form").append("<label>"+formStructure[3].label+"</label><br>");
+$("#form").append("<select id='country'></select><br><br>");
+
+
+
+for(var i=0; i<formStructure[3].option.length; i++){
+
+    $("#country").append(
+    "<option>"+formStructure[3].option[i]+"</option>"
+    );
+
+}
+
+
+$("#country").change(function(){
+
+
+$("#usa").remove();
+$("#india").remove();
+
+if($("#country").val()=="USA"){
+
+$("#form").append("<div id='usa'>" + "<label>Green Card</label><br>"+ "<input type='text' id='state'><br><br>"+"</div>"
+
+);
+
+}
+
+if($("#country").val()=="India"){
+
+$("#form").append("<div id='india'>"+"<label>Aadhar Number</label><br>"+"<input type='text' id='aadhar'><br><br>"+"</div>"
+
+);
+
+}
+
 });
 
 
-function populateFilters(){
-    let genres = new Set();
-    let authors = new Set();
+$("#submitBtn").click(function(){
 
-    booksJSON.forEach(book => {
-        genres.add(book.genres);
-        authors.add(book.author);
-    });
+$(".error").remove();
 
-    genres.forEach(g =>{
-        $('#genreFilter').append(`<option value="${g}">${g}</option>`);
-    });
+var valid=true;
 
-    authors.forEach(a=>{
-        $('#authorFilter').append(`<option value="${a}">${a}</option>`);
-    });
+var name=$("#name").val();
+
+if(name==""){
+
+$("#name").after(
+"<span class='error'> Required</span>"
+);
+
+valid=false;
+
+}
+
+else if(!/^[A-Za-z ]+$/.test(name)){
+
+$("#name").after(
+"<span class='error'> Only letters allowed</span>"
+);
+
+valid=false;
+
+}
+
+else if(name.length<3){
+
+$("#name").after(
+"<span class='error'> Minimum 3 characters</span>"
+);
+
+valid=false;
+
+}
+
+var email=$("#email").val();
+
+if(email==""){
+
+$("#email").after(
+"<span class='error'> Required</span>"
+);
+
+valid=false;
+
+}
+
+else if(!/^[^ ]+@[^ ]+\.[a-z]{2,3}$/.test(email)){
+
+$("#email").after(
+"<span class='error'> Invalid Email</span>"
+);
+valid=false;
 }
 
 
-function displayBooks(data) {
-    let table = `
-    <table border="1">
-        <tr>
-            <th>Title</th>
-            <th>Author</th>
-            <th>Genre</th>
-            <th>Price</th>
-            <th>Publish Date</th>
-        </tr>
-    `;
-
-    data.forEach(book =>{
-        table += `
-            <tr>
-                <td>${book.title}</td>
-                <td>${book.author}</td>
-                <td>${book.genres}</td>
-                <td>${book.price}</td>
-                <td>${book.publish_date}</td>
-            </tr>
-        `;
-    });
-
-    table += '</table>';
-
-    $('#tableContainer').html(table);
+var password=$("#password").val();
+if(password==""){
+$("#password").after(
+"<span class='error'> Required</span>"
+);
+valid=false;
 }
 
-
-function applyFilter(){
-    let selectedG = $("#genreFilter").val();
-    let selectedA = $("#authorFilter").val();
-    let minPrice = parseFloat($("#minPrice").val()) || 0;
-    let maxPrice = parseFloat($("#maxPrice").val()) || Infinity;
-
-    let filteredBooks = booksJSON.filter(book => {
-
-        let matchGenre = selectedG === "all" || book.genres === selectedG;
-        let matchAuthor = selectedA === "all" ||  book.author === selectedA;
-        let matchPrice = book.price >= minPrice && book.price <= maxPrice;
-
-        return matchGenre && matchAuthor && matchPrice;
-    });
-
-    displayBooks(filteredBooks);
+else if(password.length<8){
+$("#password").after(
+"<span class='error'> Minimum 8 characters</span>"
+);
+valid=false;
 }
+
+else if(!/[A-Z]/.test(password)){
+$("#password").after(
+"<span class='error'> Need 1 Capital Letter</span>"
+);
+valid=false;
+}
+
+else if(!/[0-9]/.test(password)){
+$("#password").after(
+"<span class='error'> Need 1 Number</span>"
+);
+valid=false;
+}
+
+else if(!/[!@#$%^&*]/.test(password)){
+$("#password").after(
+"<span class='error'> Need 1 Special Symbol</span>"
+);
+valid=false;
+}
+
+if(valid){
+alert("Form Submitted Successfully");
+}
+});
+
+});
