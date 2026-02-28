@@ -5,72 +5,59 @@
 }
 
 html, body{
-    height: 100%;
-    width: 100%;
+    font-family: monospace;
+    color:black;
 }
 
-
-
-h2{
-text-align:center;
-border-bottom:2px solid black;
-padding-bottom:10px;
-margin-bottom:20px;
+body{
+    margin: 25px;
 }
 
-
-/* Tab Container */
+header h1{
+    text-align: center;
+    margin:10px;
+}
 
 .tabs{
-border:2px solid black;
-padding:20px;
-box-shadow:6px 6px 0px black;
+    border:2px solid black;
+    border-radius: 8px;
+    padding:25px;
+    box-shadow:6px 6px 0px black;
 }
-
-
-/* Tab Links */
 
 .tab-links{
-list-style:none;
-padding:0;
-margin-bottom:15px;
-border-bottom:2px solid black;
-padding-bottom:10px;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    justify-content:flex-start;
+    gap:20px;
 }
 
-
-/* Tab Buttons */
-
-.tab-links li{
-display:inline-block;
-margin-right:10px;
-}
 
 .tab-links a{
-text-decoration:none;
-color:black;
-border:2px solid black;
-padding:6px 12px;
-display:inline-block;
-transition:0.2s;
+    border-radius: 4px;
+    text-decoration:none;
+    color:black;
+    border:2px solid black;
+    padding:6px 12px;   
 }
 
 .tab-links a:hover{
-background:black;
-color:white;
+    background:black;
+    color:white;
 }
 
 .activeTab{
-background:rgb(137, 137, 137);
-color:white;
+    background:rgb(55, 255, 0);
+    color:white;
 }
-
 
 .tab-content{
-display:none;
-border:2px solid black;
-padding:20px;
-margin-top:10px;
-box-shadow:4px 4px 0px black;
+    display:none;
+    border-radius: 4px;
+    border:2px solid black;
+    padding:20px;
+    margin-top:10px;
+    box-shadow:4px 4px 0px black;
 }
-
